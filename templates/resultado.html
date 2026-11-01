@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidatura enviada</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='resultado.css') }}">
+</head>
+
+{# Nome da empresa: envie "empresa" no render_template ou troque o texto abaixo #}
+{% set empresa = empresa|default('Sua Empresa') %}
+{# Percentual de acertos (evita divisão por zero) #}
+{% set pct = ((acertos / total * 100)|round|int) if total else 0 %}
+
+<body>
+
+<!-- ================= BARRA COM LOGO ================= -->
+<header class="barra" id="topo">
+    <div class="barra-conteudo">
+        <a class="logo" href="{{ url_for('index') }}" aria-label="{{ empresa }} - página inicial">
+            {# Para usar a imagem da sua empresa, apague o <svg> e use:
+               <img class="logo-img" src="{{ url_for('static', filename='logo.png') }}" alt="{{ empresa }}"> #}
+            <svg class="logo-marca" viewBox="0 0 40 40" aria-hidden="true">
+                <rect width="40" height="40" rx="10"></rect>
+                <path d="M13 28V12h7.5a5.5 5.5 0 0 1 0 11H13" fill="none" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                <circle cx="28" cy="28" r="3.2"></circle>
+            </svg>
+            <span class="logo-nome">{{ empresa }}</span>
+        </a>
+        <span class="status">Candidatura confirmada</span>
+    </div>
+</header>
+
+<!-- ================= TOPO / NOTA ================= -->
+<div class="hero">
+    <div class="hero-texto">
+        <h1>Candidatura enviada, {{ candidato.nome.split()[0] }}.</h1>
+        <p>Entraremos em contato para informar os próximos passos.</p>
+        <div class="acoes">
+            <button type="button" class="btn btn-primario" onclick="window.print()">Imprimir comprovante</button>
+            <a class="btn btn-secundario" href="#prova">Ver revisão da prova</a>
+        </div>
+    </div>
+
+    <div class="nota" role="img" aria-label="{{ acertos }} de {{ total }} questões objetivas corretas">
+        <div class="anel" style="--alvo: {{ pct }}">
+            <span class="anel-valor">{{ pct }}%</span>
+        </div>
+        <p class="nota-legenda"><strong>{{ acertos }} de {{ total }}</strong> questões objetivas corretas</p>
+    </div>
+</div>
+
+<!-- ================= CONTEÚDO ================= -->
+<main class="layout">
+
+    <aside class="lateral">
+        <section class="cartao">
+            <h2>Resumo da vaga</h2>
+            <dl class="resumo">
+                <dt>Nome</dt><dd>{{ candidato.nome }}</dd>
+                <dt>Cargo</dt><dd>{{ candidato.cargo }}</dd>
+                <dt>Salário</dt><dd>{{ candidato.salario|brl }}</dd>
+                <dt>Horário</dt><dd>{{ candidato.horario_de_trabalho }}</dd>
+            </dl>
+        </section>
+
+        <section class="cartao">
+            <h2>Próximos passos</h2>
+            <ol class="etapas">
+                <li class="feito">
+                    <strong>Candidatura recebida</strong>
+                    <span>Seus dados e a prova foram enviados.</span>
+                </li>
+                <li class="atual">
+                    <strong>Análise do perfil</strong>
+                    <span>O RH avalia suas respostas.</span>
+                </li>
+                <li>
+                    <strong>Contato do RH</strong>
+                    <span>Você receberá o retorno pelos dados informados.</span>
+                </li>
+            </ol>
+        </section>
+    </aside>
+
+    <section class="cartao" id="prova">
+        <h2>Prova: {{ acertos }} de {{ total }} questões objetivas corretas</h2>
+        {% for r in respostas %}
+        <article class="revisao {% if r.tipo == 'multipla' %}{{ 'certa' if r.acertou else 'errada' }}{% endif %}">
+            <h3>{{ r.numero }}. {{ r.texto }}</h3>
+            <p>{{ r.resposta }}</p>
+            {% if r.tipo == 'multipla' and not r.acertou %}
+            <p class="gabarito">Resposta correta: {{ r.correta }}</p>
+            {% endif %}
+        </article>
+        {% endfor %}
+    </section>
+
+    <div class="acoes-final">
+        <a class="btn btn-marca" href="{{ url_for('index') }}">Novo cadastro</a>
+        <a class="btn btn-secundario" href="#topo">Voltar ao topo</a>
+    </div>
+</main>
+
+<footer class="rodape">
+    <p>{{ empresa }} · Recrutamento e seleção</p>
+</footer>
+
+</body>
+</html>

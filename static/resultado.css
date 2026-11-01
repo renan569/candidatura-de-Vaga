@@ -1,0 +1,577 @@
+/* resultado.css - Candidatura enviada */
+
+@property --p {
+    syntax: "<number>";
+    inherits: false;
+    initial-value: 0;
+}
+
+:root {
+    --marca: #0b6e6a;
+    --marca-escura: #084744;
+    --ambar: #f5a524;
+    --tinta: #101828;
+    --suave: #5b6676;
+    --papel: #f3f5f7;
+    --cartao: #ffffff;
+    --borda: #e1e6ec;
+    --ok: #0b7a52;
+    --ok-bg: #e7f5ee;
+    --erro: #c62828;
+    --erro-bg: #fdecea;
+    --fonte: "Manrope", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+    --largura: 1080px;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --marca: #2bb3aa;
+        --marca-escura: #0a2f2e;
+        --tinta: #e6edf0;
+        --suave: #93a1a8;
+        --papel: #0c1316;
+        --cartao: #141d21;
+        --borda: #25323a;
+        --ok: #4ade9b;
+        --ok-bg: #0f2a21;
+        --erro: #ff8a80;
+        --erro-bg: #2d1514;
+    }
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: var(--fonte);
+    line-height: 1.6;
+    color: var(--tinta);
+    background: var(--papel);
+    -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+    outline: 3px solid var(--ambar);
+    outline-offset: 2px;
+}
+
+/* ================= BARRA COM LOGO ================= */
+.barra {
+    background: var(--cartao);
+    border-bottom: 1px solid var(--borda);
+}
+
+.barra-conteudo {
+    max-width: var(--largura);
+    margin: 0 auto;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--tinta);
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: -0.01em;
+}
+
+.logo-marca {
+    width: 36px;
+    height: 36px;
+    flex: none;
+}
+
+.logo-marca rect {
+    fill: var(--marca);
+}
+
+.logo-marca path {
+    stroke: #fff;
+}
+
+.logo-marca circle {
+    fill: var(--ambar);
+}
+
+.logo-img {
+    height: 36px;
+    width: auto;
+}
+
+.status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ok);
+    background: var(--ok-bg);
+}
+
+.status::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+/* ================= HERO ================= */
+.hero {
+    background: var(--marca-escura);
+    color: #fff;
+    padding: 48px max(20px, calc((100% - var(--largura)) / 2)) 80px;
+    display: grid;
+    gap: 32px;
+    align-items: center;
+}
+
+.hero h1 {
+    margin: 0 0 12px;
+    max-width: 20ch;
+    font-size: clamp(1.9rem, 4.6vw, 2.9rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+}
+
+.hero p {
+    margin: 0;
+    max-width: 46ch;
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.82);
+}
+
+.acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+/* nota em anel */
+.nota {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.anel {
+    --p: var(--alvo, 0);
+    position: relative;
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 132px;
+    height: 132px;
+    border-radius: 50%;
+    background: conic-gradient(var(--ambar) calc(var(--p) * 1%), rgba(255, 255, 255, 0.18) 0);
+    animation: encher 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) 0.25s both;
+}
+
+.anel::before {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    border-radius: 50%;
+    background: var(--marca-escura);
+}
+
+.anel-valor {
+    position: relative;
+    font-size: 1.9rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.nota-legenda {
+    max-width: 14ch;
+    font-size: 0.95rem !important;
+    line-height: 1.4;
+}
+
+.nota-legenda strong {
+    display: block;
+    color: #fff;
+    font-size: 1.15rem;
+}
+
+@keyframes encher {
+    from {
+        --p: 0;
+    }
+}
+
+/* ================= LAYOUT ================= */
+.layout {
+    position: relative;
+    max-width: var(--largura);
+    margin: -44px auto 0;
+    padding: 0 20px 48px;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr;
+}
+
+.lateral {
+    display: grid;
+    gap: 20px;
+}
+
+.cartao {
+    background: var(--cartao);
+    border: 1px solid var(--borda);
+    border-radius: 14px;
+    padding: 24px;
+}
+
+.cartao h2 {
+    margin: 0 0 18px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+/* ================= RESUMO ================= */
+.resumo {
+    margin: 0;
+}
+
+.resumo dt {
+    font-size: 0.85rem;
+    color: var(--suave);
+}
+
+.resumo dd {
+    margin: 2px 0 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--borda);
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.resumo dd:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+/* ================= PRÓXIMOS PASSOS ================= */
+.etapas {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.etapas li {
+    position: relative;
+    padding: 0 0 22px 36px;
+}
+
+.etapas li:last-child {
+    padding-bottom: 0;
+}
+
+.etapas li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 2px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--borda);
+    background: var(--cartao);
+    display: grid;
+    place-items: center;
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: #fff;
+}
+
+.etapas li::after {
+    content: "";
+    position: absolute;
+    left: 10px;
+    top: 28px;
+    bottom: 4px;
+    width: 2px;
+    background: var(--borda);
+}
+
+.etapas li:last-child::after {
+    display: none;
+}
+
+.etapas li.feito::before {
+    content: "✓";
+    background: var(--marca);
+    border-color: var(--marca);
+}
+
+.etapas li.feito::after {
+    background: var(--marca);
+}
+
+.etapas li.atual::before {
+    border-color: var(--ambar);
+    box-shadow: inset 0 0 0 4px var(--cartao), inset 0 0 0 11px var(--ambar);
+}
+
+.etapas strong {
+    display: block;
+    font-size: 0.97rem;
+}
+
+.etapas span {
+    font-size: 0.88rem;
+    color: var(--suave);
+}
+
+/* ================= REVISÃO DA PROVA ================= */
+.revisao {
+    position: relative;
+    margin-top: 12px;
+    padding: 16px 18px;
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+}
+
+.revisao h3 {
+    margin: 0 0 6px;
+    padding-right: 104px;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.revisao p {
+    margin: 0;
+    color: var(--suave);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.revisao.certa,
+.revisao.errada {
+    border-left-width: 4px;
+}
+
+.revisao.certa {
+    border-color: var(--ok);
+    background: var(--ok-bg);
+}
+
+.revisao.errada {
+    border-color: var(--erro);
+    background: var(--erro-bg);
+}
+
+.revisao.certa::after,
+.revisao.errada::after {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    padding: 2px 12px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    background: var(--cartao);
+}
+
+.revisao.certa::after {
+    content: "✓ Correta";
+    color: var(--ok);
+}
+
+.revisao.errada::after {
+    content: "✕ Incorreta";
+    color: var(--erro);
+}
+
+.revisao .gabarito {
+    margin-top: 10px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--ok);
+}
+
+/* ================= BOTÕES ================= */
+.acoes-final {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 0 22px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    font: inherit;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-primario {
+    background: var(--ambar);
+    color: #2a1a00;
+}
+
+.btn-primario:hover {
+    background: #ffb83d;
+}
+
+.btn-marca {
+    background: var(--marca);
+    color: #fff;
+}
+
+.btn-marca:hover {
+    background: var(--marca-escura);
+}
+
+.btn-secundario {
+    background: transparent;
+    color: var(--marca);
+    border-color: var(--borda);
+}
+
+.btn-secundario:hover {
+    border-color: var(--marca);
+}
+
+.hero .btn-secundario {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.45);
+}
+
+.hero .btn-secundario:hover {
+    border-color: #fff;
+}
+
+/* ================= RODAPÉ ================= */
+.rodape {
+    padding: 24px 20px;
+    border-top: 1px solid var(--borda);
+    text-align: center;
+    font-size: 0.88rem;
+    color: var(--suave);
+}
+
+.rodape p {
+    margin: 0;
+}
+
+/* ================= TELAS MAIORES ================= */
+@media (min-width: 720px) {
+    .hero {
+        grid-template-columns: 1fr auto;
+    }
+}
+
+@media (min-width: 900px) {
+    .layout {
+        grid-template-columns: 340px 1fr;
+        align-items: start;
+    }
+
+    .lateral {
+        position: sticky;
+        top: 20px;
+    }
+}
+
+/* ================= CELULAR ================= */
+@media (max-width: 560px) {
+    .status {
+        font-size: 0.78rem;
+        padding: 5px 10px;
+    }
+
+    .cartao {
+        padding: 18px;
+    }
+
+    .revisao h3 {
+        padding-right: 0;
+        margin-top: 26px;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+
+/* ================= MOVIMENTO REDUZIDO ================= */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    .anel {
+        animation: none;
+    }
+}
+
+/* ================= IMPRESSÃO ================= */
+@media print {
+    body {
+        background: #fff;
+        color: #000;
+    }
+
+    .hero {
+        background: #fff;
+        color: #000;
+        padding-bottom: 24px;
+        border-bottom: 2px solid #000;
+    }
+
+    .hero p,
+    .nota-legenda strong {
+        color: #000;
+    }
+
+    .acoes,
+    .acoes-final,
+    .status,
+    .anel {
+        display: none;
+    }
+
+    .layout {
+        margin-top: 16px;
+        grid-template-columns: 1fr;
+    }
+
+    .lateral {
+        position: static;
+    }
+
+    .cartao,
+    .revisao {
+        break-inside: avoid;
+    }
+}

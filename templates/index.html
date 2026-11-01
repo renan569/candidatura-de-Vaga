@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vaga de {{ vaga.cargo }} - Cadastro de candidato</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+    {# Nome da empresa: envie "empresa" no render_template ou troque o texto abaixo #}
+    {% set empresa = empresa|default('Sua Empresa') %}
+</head>
+<body>
+
+<!-- ================= BARRA COM LOGO ================= -->
+<nav class="cabecalho" id="topo">
+    <div class="cabecalho-conteudo">
+        <a class="logo" href="#topo" aria-label="{{ empresa }}">
+            {# Para usar a imagem da sua empresa, apague o <svg> e use:
+               <img class="logo-img" src="{{ url_for('static', filename='logo.png') }}" alt="{{ empresa }}"> #}
+            <svg class="logo-marca" viewBox="0 0 40 40" aria-hidden="true">
+                <rect width="40" height="40" rx="10"></rect>
+                <path d="M13 28V12h7.5a5.5 5.5 0 0 1 0 11H13" fill="none" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                <circle cx="28" cy="28" r="3.2"></circle>
+            </svg>
+            <span class="logo-nome">{{ empresa }}</span>
+        </a>
+        <a class="btn btn-contorno" href="#dados">Candidatar-se</a>
+    </div>
+</nav>
+
+<!-- ================= VAGA ================= -->
+<header class="topo">
+    <div class="topo-conteudo">
+        <h1>Vaga de {{ vaga.cargo }}</h1>
+
+        <ul class="vaga-info">
+            <li><span>Horário</span><strong>{{ vaga.horario }}</strong></li>
+            <li><span>Salário</span><strong>{{ vaga.salario|brl }}</strong></li>
+        </ul>
+
+        <p class="privacidade">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
+            Seus dados são usados apenas na seleção e não ficam armazenados.
+        </p>
+
+        <a class="btn btn-primario" href="#dados">Começar candidatura</a>
+    </div>
+</header>
+
+<main>
+    <!-- ================= COMO FUNCIONA ================= -->
+    <ol class="etapas-resumo" aria-label="Etapas da candidatura">
+        <li><strong>Seus dados</strong><span>Contato e experiência</span></li>
+        <li><strong>Prova</strong><span>{{ perguntas|length }} questões de conhecimentos gerais</span></li>
+        <li><strong>Envio</strong><span>Receba a confirmação na hora</span></li>
+    </ol>
+
+    {% if erros %}
+    <div class="erros" role="alert">
+        <strong>Corrija antes de enviar:</strong>
+        <ul>{% for e in erros %}<li>{{ e }}</li>{% endfor %}</ul>
+    </div>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('enviar') }}" id="formulario" novalidate>
+        <section id="dados">
+            <h2>Seus dados</h2>
+            <p class="secao-desc">Usaremos essas informações para entrar em contato com você.</p>
+
+            <label>Nome completo
+                <input type="text" name="nome" value="{{ valores.get('nome', '') }}" autocomplete="name">
+            </label>
+            <label>CPF
+                <input type="text" name="cpf" id="cpf" inputmode="numeric" placeholder="000.000.000-00" value="{{ valores.get('cpf', '') }}">
+            </label>
+            <label>Telefone
+                <input type="text" name="telefone" id="telefone" inputmode="tel" placeholder="(31) 90000-0000" value="{{ valores.get('telefone', '') }}">
+            </label>
+            <label>E-mail
+                <input type="email" name="email" value="{{ valores.get('email', '') }}" autocomplete="email">
+            </label>
+            <label>Experiência profissional
+                <textarea name="experiencia" rows="4">{{ valores.get('experiencia', '') }}</textarea>
+            </label>
+        </section>
+
+        <section id="prova">
+            <h2>Prova de conhecimentos gerais</h2>
+            <p class="secao-desc">Marque uma alternativa nas questões objetivas e escreva com suas palavras nas abertas.</p>
+
+            {% for p in perguntas %}
+            <fieldset class="pergunta">
+                <legend>{{ loop.index }}. {{ p.texto }}</legend>
+                {% if p.tipo == 'multipla' %}
+                    {% for letra, texto in p.opcoes.items() %}
+                    <label class="opcao">
+                        <input type="radio" name="{{ p.id }}" value="{{ letra }}" {% if valores.get(p.id) == letra %}checked{% endif %}>
+                        <span>{{ letra }}) {{ texto }}</span>
+                    </label>
+                    {% endfor %}
+                {% else %}
+                    <textarea name="{{ p.id }}" rows="3">{{ valores.get(p.id, '') }}</textarea>
+                {% endif %}
+            </fieldset>
+            {% endfor %}
+        </section>
+
+        <!-- ================= BARRA DE ENVIO ================= -->
+        <div class="barra">
+            <div class="barra-progresso">
+                <span id="progresso">0 de {{ perguntas|length }} respondidas</span>
+                <div class="trilho" aria-hidden="true"><div class="preenchido" id="preenchido"></div></div>
+            </div>
+            <a class="btn btn-contorno" href="#topo">Voltar ao topo</a>
+            <button type="submit" class="btn btn-marca">Enviar candidatura</button>
+        </div>
+    </form>
+</main>
+
+<footer class="rodape">
+    <p>{{ empresa }} · Recrutamento e seleção</p>
+</footer>
+
+{# Preenche a barra visual a partir do texto "N de M respondidas" (não altera o script.js) #}
+<script>
+(function () {
+    var texto = document.getElementById('progresso');
+    var barra = document.getElementById('preenchido');
+    if (!texto || !barra) return;
+    function atualizar() {
+        var m = texto.textContent.match(/(\d+)\s*de\s*(\d+)/);
+        if (m && Number(m[2]) > 0) {
+            barra.style.width = Math.round(Number(m[1]) / Number(m[2]) * 100) + '%';
+        }
+    }
+    new MutationObserver(atualizar).observe(texto, { childList: true, characterData: true, subtree: true });
+    atualizar();
+})();
+</script>
+</body>
+</html>

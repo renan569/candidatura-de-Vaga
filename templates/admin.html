@@ -1,0 +1,12 @@
+{{ empresa }}
+Candidaturas{{ candidatos|length }}
+Média de acertos{{ media }}%
+Baixar CSV
+{% if candidatos %}
+{% for c in candidatos %} {% endfor %}
+Nome	E-mail	Telefone	CPF	Nota	Data	
+{{ c.nome }}	{{ c.email }}	{{ c.telefone }}	{{ c.cpf|cpf_oculto }}	{{ c.acertos }}/{{ c.total }}	{{ c.criado_em|data_br }}	Ver
+{% else %}
+Nenhuma candidatura recebida ainda.
+
+{% endif %}

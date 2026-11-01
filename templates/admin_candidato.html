@@ -1,0 +1,25 @@
+{{ c.nome }}
+{{ empresa }}
+← Voltar à lista
+
+Dados do candidato
+Cargo
+{{ c.cargo }}
+CPF
+{{ c.cpf|cpf }}
+Telefone
+{{ c.telefone }}
+E-mail
+{{ c.email }}
+Nota na prova
+{{ c.acertos }} de {{ c.total }} questões objetivas
+Enviada em
+{{ c.criado_em|data_br }}
+Experiência
+{{ c.experiencia }}
+Respostas da prova
+{% for r in respostas %}
+{{ r.numero }}. {{ r.pergunta }}
+{{ r.resposta }}
+
+{% endfor %}
